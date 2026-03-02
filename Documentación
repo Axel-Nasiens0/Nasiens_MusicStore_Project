@@ -1,0 +1,95 @@
+# Tienda de Música en Solana con Rust y Anchor 🎶
+
+## Descripción
+
+Este programa implementa una tienda de música descentralizada sobre la blockchain Solana usando el framework Anchor en Rust. Permite crear una tienda, agregar canciones, verlas, eliminarlas y alternar su estado de disponibilidad.
+
+---
+
+## Instalación y configuración
+
+Para comenzar, asegúrate de tener instalado Rust, Anchor y configurado el entorno para desarrollo en Solana.
+
+---
+
+## Instrucciones de uso
+
+### Programas en Rust (lib.rs)
+
+- **crear_tienda**  
+  Crea y inicializa una tienda de música ligada al propietario (owner). Recibe un nombre de tienda y la guarda junto con un vector vacío de canciones.  
+  ```rust
+  pub fn crear_tienda(context: Context<NuevaTienda>, nombre: String) -> Result<()> { ... }
+  ```
+  
+- **agregar_cancion**  
+  Agrega una nueva canción a la tienda con datos: artista, nombre, álbum, duración y estado disponible.  
+  ```rust
+  pub fn agregar_cancion(context: Context<NuevaCancion>, artista: String, nombre: String, album: String, duracion: u16) -> Result<()> { ... }
+  ```
+  
+- **ver_canciones**  
+  Muestra todas las canciones disponibles en la tienda usando logs.  
+  ```rust
+  pub fn ver_canciones(context: Context<NuevaCancion>) -> Result<()> { ... }
+  ```
+  
+- **eliminar_cancion**  
+  Elimina una canción dada su nombre. Si la canción no existe, retorna un error personalizado `CancionNoExiste`.  
+  ```rust
+  pub fn eliminar_cancion(context: Context<NuevaCancion>, nombre: String) -> Result<()> { ... }
+  ```
+  
+- **alternar_estado**  
+  Cambia el estado de disponibilidad de una canción (de true a false o viceversa). Retorna error si no existe la canción.  
+  ```rust
+  pub fn alternar_estado(context: Context<NuevaCancion>, nombre: String) -> Result<()> { ... }
+  ```
+
+### Estructuras principales
+
+- `Tienda`: cuenta on-chain que almacena el propietario, nombre y una lista de canciones (`Vec<Cancion>`).  
+- `Cancion`: estructura para representar cada canción con artista, nombre, álbum, duración y disponibilidad.  
+
+### Cuentas (Contextos)
+
+- `NuevaTienda`: contexto para crear la tienda con PDA derivado, owner como pagador y el programa del sistema.  
+- `NuevaCancion`: contexto para modificar la tienda, incluyendo agregar o eliminar canciones.
+
+### Errores personalizados
+
+- `CancionNoExiste`: se lanza si una canción no es encontrada para eliminar o alternar estado.  
+- `NoEresElOwner`: error preparado para validar propietario pero no implementado en el código actual.
+
+---
+
+## Tests (anchor.test.ts)
+
+1. **Crear o verificar tienda**  
+   Intenta crear la tienda, si ya existe la verifica que el nombre sea correcto.
+2. **Agregar canción**  
+   Prueba a agregar una canción y verifica que la última canción en la lista coincide con la agregada.
+
+---
+
+## Cliente (client.ts)
+
+Este script permite al usuario ejecutar acciones básicas en la tienda según un modo configurado:
+
+- `AGREGAR`: añadir canción con datos especificados.  
+- `VER`: imprimir la lista actual de canciones.  
+- `ELIMINAR`: borra una canción por nombre.  
+- `ALTERNAR`: cambia la disponibilidad de una canción.
+
+Para usarlo sólo cambia los valores de configuración en la parte superior para definir la acción y datos de la canción.
+
+---
+
+## Cómo correr el proyecto
+
+1. Despliega el programa en Solana con Anchor.  
+2. Corre los tests para validar comportamiento.  
+3. Usa el cliente para interactuar con la tienda desde la consola.  
+
+
+¿Quieres que te ayude a generar el README con formato específico o agregar detalles técnicos?
